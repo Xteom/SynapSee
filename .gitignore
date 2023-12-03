@@ -3,3 +3,4 @@ images/train
 processed_data/*.csv
 dump/*
 SynapSee_data.json
+*cpython*
