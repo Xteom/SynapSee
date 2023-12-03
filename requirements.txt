@@ -1,0 +1,10 @@
+datasets
+pillow
+brainflow
+torch
+pandas
+numpy
+matplotlib
+seaborn
+PySide
+scipy
