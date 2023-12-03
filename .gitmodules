@@ -1,0 +1,3 @@
+[submodule "SynapSee_data"]
+	path = SynapSee_data
+	url = https://github.com/NeuroLab-ITAM/SynapSee_data.git
