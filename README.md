@@ -28,3 +28,33 @@ git submodule update
 * /SynapSee_data: Folder with the dataset.
 * LSTM-CNN.ipynb: Notebook with the LSTM-CNN model
 * SynapSee_models.ipynb: Notebook where we are currently working on new models.
+
+
+## Run with cuda (this section has worked to be done)
+Check cuda version
+```bash
+nvidia-smi.exe
+```
+
+Activate environment
+```bash
+conda activate SynapSee
+```
+
+Install cuda toolkit version
+```bash
+conda install cuda --channel nvidia/label/cuda-12.2.0
+```
+
+Check installation
+```bash
+import torch
+print(f'PyTorch version: {torch.__version__}')
+print('*'*10)
+print(f'_CUDA version: ')
+!nvcc --version
+print('*'*10)
+print(f'CUDNN version: {torch.backends.cudnn.version()}')
+print(f'Available GPU devices: {torch.cuda.device_count()}')
+print(f'Device Name: {torch.cuda.get_device_name()}')
+```
