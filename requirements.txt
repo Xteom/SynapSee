@@ -8,3 +8,4 @@ matplotlib
 seaborn
 PySide6
 scipy
+scikit-learn
