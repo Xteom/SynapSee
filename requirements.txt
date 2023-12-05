@@ -6,5 +6,5 @@ pandas
 numpy
 matplotlib
 seaborn
-PySide
+PySide6
 scipy
