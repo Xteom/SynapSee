@@ -16,8 +16,8 @@ git submodule update
 This project was developed in python 3.10.13.
 
 ```bash
-conda create -n SynapSee python=3.10.13
-conda activate SynapSee
+conda create -n synapsee python=3.10.13
+conda activate synapsee
 pip install -r requirements.txt
 ```
 
