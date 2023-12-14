@@ -74,7 +74,8 @@ def train_model(model,
                   device,
                   num_epochs=50,
                   patience=-1,
-                  verbose=False):
+                  verbose=False,
+                  channels_to_include=None):
     """
     Trains a model and returns the training and validation losses and accuracies.
 
@@ -89,6 +90,8 @@ def train_model(model,
         patience (int): The number of epochs to wait for the validation loss to improve before early stopping.
                 default: -1 (no early stopping) (all negative values are treated as -1)
         verbose (int): Whether to print the training progress every `verbose` epochs.
+        channels_to_include (list): A list of channel index to include in the training. If None, all channels are included.
+                                the order of the channels is ['Fp1', 'Fp2', 'C3', 'C4', 'P7', 'P8', 'O1', 'O2', 'F7', 'F8', 'F3', 'F4', 'T7', 'T8', 'P3', 'P4']
 
     Returns:
         (list, list, list): A tuple of lists containing the training losses, validation losses, and validation accuracies.
@@ -110,6 +113,10 @@ def train_model(model,
         for batch in train_loader:
             eeg_signals = batch['eeg_signal'].to(device)
             targets = batch['class'].to(device)
+
+            # Select specified channels if channels_to_include is not None
+            if channels_to_include is not None: 
+                eeg_signals = eeg_signals[:, :, channels_to_include]
 
             # Forward pass
             outputs = model(eeg_signals)
@@ -143,6 +150,10 @@ def train_model(model,
                 eeg_signals = batch['eeg_signal'].to(device)
                 targets = batch['class'].to(device)
 
+                # Select specified channels if channels_to_include is not None
+                if channels_to_include is not None:
+                    eeg_signals = eeg_signals[:, :, channels_to_include]
+                    
                 outputs = model(eeg_signals)
                 loss = criterion(outputs, targets)
                 total_val_loss += loss.item()

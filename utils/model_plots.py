@@ -102,7 +102,8 @@ def evaluate_class_metrics(model,
                            class_names, 
                            print_metrics=True, 
                            grey_background=True, 
-                           size=(12, 6)):
+                           size=(12, 6),
+                           channels_to_include=None):
     """
     Evaluates the model on the given DataLoader and calculates the accuracy for each class.
     Also prints total number of observations, count per class, correct counts per class, and overall accuracy.
@@ -114,6 +115,8 @@ def evaluate_class_metrics(model,
     :param print_metrics: Boolean, if True, print the metrics
     :param grey_background: Boolean, if True, set the background color to grey in the plots
     :param size: Tuple, the size of the plot
+    :param channels_to_include: List or array of channel indices to include in the evaluation. If None, all channels are included.
+                                the order of the channels is ['Fp1', 'Fp2', 'C3', 'C4', 'P7', 'P8', 'O1', 'O2', 'F7', 'F8', 'F3', 'F4', 'T7', 'T8', 'P3', 'P4']
     :return: None
     """
     model.eval()  # Set the model to evaluation mode
@@ -127,6 +130,10 @@ def evaluate_class_metrics(model,
         for batch in data_loader:
             inputs = batch['eeg_signal'].to(device)
             labels = batch['class'].to(device)
+
+            # Select specified channels if channels_to_include is not None
+            if channels_to_include is not None:
+                inputs = inputs[:, :, channels_to_include]
 
             outputs = model(inputs)
             _, predicted = torch.max(outputs, 1)
