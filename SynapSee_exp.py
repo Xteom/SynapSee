@@ -1,14 +1,14 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton, QHBoxLayout
-from PySide6.QtGui import QPixmap, QImage
-from PySide6.QtCore import QTimer, QDateTime, Qt
-from utils.brainflow_streamer import brainflow_streamer  # Make sure this path is correct
+from PySide6.QtGui import QPixmap
+from PySide6.QtCore import QTimer, Qt
+from utils.brainflow_streamer import brainflow_streamer 
 import os
-from PIL import Image
 import time
+import datetime
 
 class ImageApp(QMainWindow):
-    def __init__(self, timestamps_output_file="timestamps.csv", eeg_output_file="output_file.csv", port="COM4"):
+    def __init__(self, timestamps_output_file="timestamps.csv", eeg_output_file="output_file.csv", port="synthetic"):
         print("Initializing ImageApp")
         super().__init__()
         self.eeg_output_file = eeg_output_file
@@ -16,7 +16,6 @@ class ImageApp(QMainWindow):
         self.setWindowTitle("BCI Image Viewer")
         self.initUI()
         self.image_index = 0
-        self.start_timestamp = time.time()
         self.timestamps = []
         self.bci_streamer = brainflow_streamer(port)
         self.setStyleSheet("background-color: gray;")
@@ -42,6 +41,8 @@ class ImageApp(QMainWindow):
         print("Starting display")
         self.start_button.hide()  # Hide the start button
         self.bci_streamer.start_bci()  # Start BCI
+        self.start_timestamp = time.time() # Start timestamp (should be the same as the BCI start timestamp)
+        print("Started BCI")
         self.load_images()  # Load images
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.show_next_image)
@@ -71,7 +72,6 @@ class ImageApp(QMainWindow):
         print("Loaded images")
         
     def show_next_image(self):
-        print("Showing next image")
         if self.image_index < len(self.images):
             image_path = self.images[self.image_index]
 
@@ -99,8 +99,6 @@ class ImageApp(QMainWindow):
             self.bci_streamer.stop_bci(output_file=self.eeg_output_file)  # Save the BCI data
             self.save_timestamps()  # Save timestamps
             QApplication.instance().quit()
-        print("Finished showing images")
-
 
     def resume_timer(self):
         self.image_label.setStyleSheet("")  # Reset the style to default
@@ -112,13 +110,33 @@ class ImageApp(QMainWindow):
             for path, timestamp in self.timestamps:
                 f.write(f'{path}, {timestamp}\n')
 
-def main():
+def run_app(port="synthetic"):
+    '''
+    This function runs the app to collect data for the SynapSee project.
+    args:
+        port: the port number to use for the brainflow streamer
+    '''
+    name = input("Enter subject name: ")
+    sex = input("Enter subject sex (m/w/o): ")
+    age = input("Enter subject age: ")
+    has_cat = input("Does the subject have a cat? (y/n): ")
+    has_dog = input("Does the subject have a dog? (y/n): ")
+    has_rabbit = input("Does the subject have a rabbit? (y/n): ")
+
     app = QApplication(sys.argv)
 
-    # The dataset parameter is no longer needed, so we remove it from the class initialization
-    ex = ImageApp(timestamps_output_file="timestamps_mateo1.csv", eeg_output_file="output_file_mateo1.csv")#, port="synthetic")
+    now = datetime.datetime.now()
+    str_now = now.strftime("%Y%m%d%H%M")
+    str_name = f"{name}-{sex}-{age}-{has_cat}-{has_dog}-{has_rabbit}-{str_now}"
+
+    ex = ImageApp(timestamps_output_file=f"SynapSee_data/timestamps_{str_name}.csv",
+                   eeg_output_file=f"SynapSee_data/output_file_{str_name}.csv", port=port)
     ex.show()
     sys.exit(app.exec())
+
+# this needs to be modified to take in the port number
+def main():
+    run_app()
 
 if __name__ == '__main__':
     main()
