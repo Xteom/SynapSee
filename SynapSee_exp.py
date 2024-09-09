@@ -1,8 +1,8 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton, QHBoxLayout
-from PySide6.QtGui import QPixmap, QImage
-from PySide6.QtCore import QTimer, QDateTime, Qt
-from utils.brainflow_streamer import brainflow_streamer  # Make sure this path is correct
+from PySide6.QtGui import QPixmap
+from PySide6.QtCore import QTimer, Qt
+from utils.brainflow_streamer import BrainflowStreamer 
 import os
 from PIL import Image
 import time
@@ -18,7 +18,7 @@ class ImageApp(QMainWindow):
         self.image_index = 0
         self.start_timestamp = time.time()
         self.timestamps = []
-        self.bci_streamer = brainflow_streamer(port)
+        self.bci_streamer = BrainflowStreamer(port)
         self.setStyleSheet("background-color: gray;")
         print("Initialized ImageApp")
 
