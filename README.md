@@ -5,16 +5,20 @@ SynapSee is an innovative project exploring the use of EEG signals for image cat
 ## How to clone this repository
 
 ```bash
-git clone --recursive-submodules https://github.com/NeuroLab-ITAM/SynapSee.git
-```
-
-or
-
-```bash
 git clone http://github.com/NeuroLab-ITAM/SynapSee.git
 cd SynapSee_data
 git submodule init
 git submodule update
+```
+
+## Setup environment
+
+This project was developed in python 3.10.13.
+
+```bash
+conda create -n synapsee python=3.10.13
+conda activate synapsee
+pip install -r requirements.txt
 ```
 
 ## Folder structure
@@ -29,7 +33,6 @@ git submodule update
 The file are ordered as you should run (or look at) them to replicate the project. You should only run the files with the .ipynb extension.
 The files are:
 
-* `brainflow_test` (Optional): Notebook to test brainflow connection
 * `SynapSee_exp.ipynb`: Notebook to run the experiments.
 * `SynapSee_exp.py`: Python file with the experiment's app.
 * `databuilder.ipynb`: Notebook to build the dataset from the raw data. (output: `SynapSee_data.json`)
@@ -73,4 +76,3 @@ print(f'CUDNN version: {torch.backends.cudnn.version()}')
 print(f'Available GPU devices: {torch.cuda.device_count()}')
 print(f'Device Name: {torch.cuda.get_device_name()}')
 ```
->>>>>>> Stashed changes
