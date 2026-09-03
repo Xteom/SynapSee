@@ -21,6 +21,8 @@ class EEGDataset(Dataset):
     # Define a mapping from class labels to integers as a class attribute
     class_mapping = {'cat': 0, 'dog': 1, 'rabbit': 2, 'control': 3}
 
+    class_names = class_mapping.keys()
+
     def __init__(self, json_file, subjects_to_include=None):
         with open(json_file, 'r') as file:
             data = json.load(file)
